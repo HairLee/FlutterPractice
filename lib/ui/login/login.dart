@@ -1,164 +1,253 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_rsa_provider/ui/DetailPage.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-void main() => runApp(new Login());
 
-class Login extends StatefulWidget    {
-
+class Login extends StatelessWidget {
   @override
-  State<StatefulWidget> createState() {
-    return new BodyLayout();
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      title: 'Flutter Demo',
+      theme: new ThemeData(
+        brightness: Brightness.dark,
+        primaryColorBrightness: Brightness.dark,
+      ),
+      home: new HomeScreen(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
-class BodyLayout extends State<Login> {
+class Song extends StatelessWidget {
+  const Song({ this.title, this.author, this.likes });
 
-  var _isLoading = false;
-  var videos;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
+  final String title;
+  final String author;
+  final int likes;
 
   @override
   Widget build(BuildContext context) {
-
-    _fetchData() async {
-
-      print("Attempting to fetch data from network");
-
-      final url = "https://api.letsbuildthatapp.com/youtube/home_feed";
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        print(response.body);
-
-        final map = json.decode(response.body);
-        final videosJson = map["videos"];
-
-        // videosJson.forEach((video) {
-        //   print(video["name"]);
-        // });
-
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-
-    final usernameController = TextEditingController();
-    final passwordController = TextEditingController();
-
-    _doLogin(){
-      String username = usernameController.text;
-      String password = passwordController.text;
-      print("Logingggggggg $username $password");
-
-      setState(() {
-        _isLoading = true;
-      });
-
-      _fetchData();
-    }
-
-    return new MaterialApp(
-      title: "What is this?",
-      home: Scaffold(
-
-        appBar: PreferredSize(child:  new AppBar(
-
-          title: new Text("Login"),
-          actions: <Widget>[
-            new IconButton(
-              icon: new Icon(Icons.ac_unit),
-              onPressed: () {
-
-              },
-            )
-          ],
-        ), preferredSize: Size.fromHeight(0.0)),
-
-        body:  new Center(
-            child: _isLoading
-                ? new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.red)) : new Container(
-                padding: new EdgeInsets.all(18.0),
-                child: new Column(
-
-                  children: <Widget>[
-                    new Hero(
-                      tag: 'hero',
-                      child: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: 8.0,
-                        child: Image.asset('assets/logo.png'),
-                      ),
-                    ),
-                    new Text("Enter Your Username And Password", style: new TextStyle(fontStyle: FontStyle.italic),),
-                    new Container(
-                      height: 20.0,width: 20.0,
-                    ),
-                    new TextFormField(
-                      autofocus: false,
-                      controller: usernameController,
-                      validator: (val) {
-                        return val.length < 10
-                            ? "Username must have atleast 10 chars"
-                            : null;
-                      },
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.directions_car),
-                        suffixIcon: Icon(Icons.person),
-                        hintText: 'Username~~',
-                        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-
-                      ),
-                    ), new Container(
-                      height: 20.0,width: 0.0,
-                    ),
-                    new TextFormField(
-                      autofocus: false,
-                      obscureText: true,
-                      controller: passwordController,
-                      validator: (val) {
-                        return val.length < 10
-                            ? "Username must have atleast 10 chars"
-                            : null;
-                      },
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.directions_car,color: Colors.yellow,),
-                        suffixIcon: Icon(Icons.lock),
-                        hintText: 'Password',
-                        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-                      ),
-                    ), new Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child:ButtonTheme(
-                          minWidth: 200.0,
-                          height: 42.0,
-                          child : RaisedButton(
-                            color: Colors.blue,
-                            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                            onPressed: () {
-                              _doLogin();
-                            },
-                            child: Text('Login', style: TextStyle(color: Colors.white)),
-                          )) ,
-                    )
-                  ],
-                )
-            )),
+    TextTheme textTheme = Theme
+        .of(context)
+        .textTheme;
+    return new Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+      decoration: new BoxDecoration(
+        color: Colors.grey.shade200.withOpacity(0.3),
+        borderRadius: new BorderRadius.circular(5.0),
       ),
+      child: new IntrinsicHeight(
+        child: new Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            new Container(
+              margin: const EdgeInsets.only(top: 4.0, bottom: 4.0, right: 10.0),
+              child: new CircleAvatar(
+                backgroundImage: new NetworkImage(
+                    'http://thecatapi.com/api/images/get?format=src'
+                        '&size=small&type=jpg#${title.hashCode}'
+                ),
+                radius: 20.0,
+              ),
+            ),
+            new Expanded(
+              child: new Container(
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    new Text(title, style: textTheme.subhead),
+                    new Text(author, style: textTheme.caption),
+                  ],
+                ),
+              ),
+            ),
+            new Container(
+              margin: new EdgeInsets.symmetric(horizontal: 5.0),
+              child: new InkWell(
+                child: new Icon(Icons.play_arrow, size: 40.0),
+                onTap: () {
+                  print("HairLee ~~~~~~~$author");
+                  Navigator.push(context,
+                      new MaterialPageRoute(
+                          builder: (context) => new DetailPage()
+                      )
+                  );
+                },
+              ),
+            ),
+            new Container(
+              margin: new EdgeInsets.symmetric(horizontal: 5.0),
+              child: new InkWell(
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    new Icon(Icons.favorite, size: 25.0),
+                    new Text('${likes ?? ''}'),
+                  ],
+                ),
+                onTap: () {
+                  // TODO(implement)
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Feed extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new ListView(
+      children: [
+        new Song(title: 'Trapadelic lobo', author: 'lillobobeats', likes: 4),
+        new Song(title: 'Different', author: 'younglowkey', likes: 23),
+        new Song(title: 'Future', author: 'younglowkey', likes: 2),
+        new Song(title: 'ASAP', author: 'tha_producer808', likes: 13),
+        new Song(title: '🌲🌲🌲', author: 'TraphousePeyton'),
+        new Song(title: 'Something sweet...', author: '6ryan'),
+        new Song(title: 'Sharpie', author: 'Fergie_6'),
+      ],
+    );
+  }
+}
+
+class CustomTabBar extends AnimatedWidget implements PreferredSizeWidget {
+  CustomTabBar({ this.pageController, this.pageNames })
+      : super(listenable: pageController);
+
+  final PageController pageController;
+  final List<String> pageNames;
+
+  @override
+  final Size preferredSize = new Size(0.0, 40.0);
+
+  @override
+  Widget build(BuildContext context) {
+    TextTheme textTheme = Theme
+        .of(context)
+        .textTheme;
+    return new Container(
+      height: 40.0,
+      margin: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      decoration: new BoxDecoration(
+        color: Colors.grey.shade800.withOpacity(0.5),
+        borderRadius: new BorderRadius.circular(20.0),
+      ),
+      child: new Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: new List.generate(pageNames.length, (int index) {
+          return new InkWell(
+              child: new Text(
+                  pageNames[index],
+                  style: textTheme.subhead.copyWith(
+                    color: Colors.white.withOpacity(
+                      index == pageController.page ? 1.0 : 0.2,
+                    ),
+                  )
+              ),
+              onTap: () {
+                pageController.animateToPage(
+                  index,
+                  curve: Curves.easeOut,
+                  duration: const Duration(milliseconds: 300),
+                );
+              }
+          );
+        })
+            .toList(),
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => new _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  PageController _pageController = new PageController(initialPage: 2);
+
+  @override
+  build(BuildContext context) {
+    final Map<String, Widget> pages = <String, Widget>{
+      'My Music': new Center(
+        child: new Text('My Music not implemented'),
+      ),
+      'Shared': new Center(
+        child: new Text('Shared not implemented'),
+      ),
+      'Feed': new Feed(),
+    };
+    TextTheme textTheme = Theme
+        .of(context)
+        .textTheme;
+    return new Stack(
+      children: [
+        new Container(
+            decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                  begin: FractionalOffset.topCenter,
+                  end: FractionalOffset.bottomCenter,
+                  colors: [
+                    const Color.fromARGB(255, 253, 72, 72),
+                    const Color.fromARGB(255, 87, 97, 249),
+                  ],
+                  stops: [0.0, 1.0],
+                )
+            ),
+            child: new Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: new Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: new Text(
+                    'T I Z E',
+                    style: textTheme.headline.copyWith(
+                      color: Colors.grey.shade800.withOpacity(0.8),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+            )
+        ),
+        new Scaffold(
+          backgroundColor: const Color(0x00000000),
+          appBar: new AppBar(
+            backgroundColor: const Color(0x00000000),
+            elevation: 0.0,
+            leading: new Center(
+              child: new ClipOval(
+                child: new Image.network(
+                  'http://i.imgur.com/TtNPTe0.jpg',
+                ),
+              ),
+            ),
+            actions: [
+              new IconButton(
+                icon: new Icon(Icons.add),
+                onPressed: () {
+                  // TODO: implement
+                },
+              ),
+            ],
+            title: const Text('tofu\'s songs'),
+            bottom: new CustomTabBar(
+              pageController: _pageController,
+              pageNames: pages.keys.toList(),
+            ),
+          ),
+          body: new PageView(
+            controller: _pageController,
+            children: pages.values.toList(),
+          ),
+        ),
+      ],
     );
   }
 }

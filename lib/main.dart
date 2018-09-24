@@ -4,6 +4,8 @@ import 'package:flutter_app_rsa_provider/ui/test_viewimpl.dart';
 import 'package:flutter_app_rsa_provider/ui/user.dart';
 import 'package:flutter_app_rsa_provider/ui/test_presenter.dart';
 import 'package:flutter_app_rsa_provider/ui/test_image_loader.dart';
+import 'package:flutter_app_rsa_provider/ui/login/login.dart';
+import 'ui/login/UDPSocketTest.dart';
 
 
 void main() => runApp(new MyApp());
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      home: new Login(),
 //      home: new TestImageLoader(title: 'Flutter Demo Home Page'),
     );
   }
